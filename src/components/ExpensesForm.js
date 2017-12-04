@@ -31,7 +31,18 @@ class ExpensesForm extends React.Component {
           debtorOptions
         });
       })
-  } 
+  }
+
+  componentDidUpdate() {
+    const user = this.props.user;
+    const debtorOptions = this.state.debtorOptions;
+    const exists = debtorOptions.find((debtor) => debtor.key === user.id);
+    if (exists) {
+      this.setState({
+        debtorOptions: debtorOptions.filter((debtor) => debtor.key !== user.id)
+      })
+    }
+  }
   
   onSubmitHandler = (event) => {
     const priceElement = document.getElementById('expensePrince');

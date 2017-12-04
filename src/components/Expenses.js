@@ -40,7 +40,9 @@ class Expenses extends React.Component {
   }
 
   setUser = (user) => {
-    console.log(user)
+    this.setState({ 
+      user
+    })
   }
 
   addExpense = (expense) => {
@@ -74,10 +76,11 @@ class Expenses extends React.Component {
 
   render() {
     const loggedIn = Object.keys(this.state.user).length !== 0;
+    const usersAvailable = this.state.users.length > 0; 
     return (
       <Container>
-        {!loggedIn && <UserLogin users={this.state.users} />}
-        <ExpensesList expenses={this.state.expenses} deleteExpense={this.deleteExpense}/>
+        {(!loggedIn && usersAvailable) && <UserLogin users={this.state.users} setUser={this.setUser} />}
+        <ExpensesList expenses={this.state.expenses} deleteExpense={this.deleteExpense} />
         <ExpensesForm addExpense={this.addExpense} user={this.state.user} />
       </Container>
     );
