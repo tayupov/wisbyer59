@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, Icon } from 'semantic-ui-react'
+import { List } from 'semantic-ui-react'
 
 class ExpensesList extends React.Component {
 
@@ -19,12 +19,15 @@ class ExpensesList extends React.Component {
   render() {
     const expenses = this.props.expenses;
     return (
-      <List>
+      <List divided relaxed>
         {expenses.map((expense, index) => {
           return (
             <List.Item key={index}>
-              <Icon name='delete' onClick={() => this.onClickHandler(expense.id)} />
-              <List.Content>{expense.description}</List.Content>
+              <List.Icon name='delete' verticalAlign="middle" onClick={() => this.onClickHandler(expense.id)} />
+              <List.Content>
+                <List.Header>{expense.price}</List.Header>
+                <List.Description>{expense.description}</List.Description>
+              </List.Content>
             </List.Item>
           );
         })}
