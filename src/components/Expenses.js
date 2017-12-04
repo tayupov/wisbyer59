@@ -4,6 +4,7 @@ import { Container } from 'semantic-ui-react'
 import UserLogin from './UserLogin';
 import ExpensesList from './ExpensesList'
 import ExpensesForm from './ExpensesForm'
+import ExpensesHeader from './ExpensesHeader'
 
 const API = 'https://wisbyer59-api.herokuapp.com/';
 const USER_PATH = 'users?';
@@ -80,6 +81,8 @@ class Expenses extends React.Component {
     return (
       <Container>
         {(!loggedIn && usersAvailable) && <UserLogin users={this.state.users} setUser={this.setUser} />}
+        
+        <ExpensesHeader />
         <ExpensesList expenses={this.state.expenses} deleteExpense={this.deleteExpense} />
         <ExpensesForm addExpense={this.addExpense} user={this.state.user} />
       </Container>

@@ -14,7 +14,10 @@ class ExpensesForm extends React.Component {
       debtorId: '',
       debtorOptions: [{
         key: 0, value: 'Both', text: 'Both'
-      }]
+      }],
+      categoryOptions: [
+        
+      ]
     }
   }
 
@@ -87,6 +90,7 @@ class ExpensesForm extends React.Component {
           <Form.Field control={Input} placeholder="Price" id="expensePrince" type="number" min="0" step="0.01"/>
           <Form.Field control={Input} placeholder="Description" id="expenseDescription" type="text" />
           <Form.Field control={Select} placeholder="Debtor" id="expenseDebtor" options={this.state.debtorOptions} onChange={this.onDebtorChange} />
+          <Form.Field control={Select} placeholder="Category" id="expenseCategory" options={this.state.categoryOptions} />
           <Form.Field control={Button}>Submit</Form.Field>
         </Form.Group>
       </Form>
