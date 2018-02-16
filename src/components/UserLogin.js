@@ -12,10 +12,10 @@ class UserLogin extends React.Component {
     const users = this.props.users;
     return (
       <Dimmer active>
-        <Card.Group className="centered">
+        <Card.Group className='centered'>
           {users.map((user, index) => {
             return (
-              <Card as="a" key={index} user={user} onClick={this.onClickHandler}>
+              <Card as='a' key={index} user={user} onClick={this.onClickHandler}>
                 <Image src={user.image_url} />
                 <Card.Content>
                   <Card.Header>

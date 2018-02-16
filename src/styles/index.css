@@ -1,0 +1,19 @@
+#content {
+  margin-top: 20px !important;
+  margin-left: 200px !important;
+}
+#add-expense-sticky {
+  position: fixed;
+  bottom: 1em;
+  right: 2em;
+  cursor: pointer;
+}
+
+/* overwrite semantic ui defaults */
+#popup-sticky {
+    position: fixed !important;
+    right: 4.8em !important;
+    left: auto !important;
+    bottom: 6.5em !important;
+    top: auto !important;
+}

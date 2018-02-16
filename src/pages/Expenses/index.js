@@ -1,10 +1,10 @@
 import React from 'react'
-import { Container } from 'semantic-ui-react'
+import { Container, Popup, Icon } from 'semantic-ui-react'
 
-import UserLogin from './UserLogin';
 import ExpensesList from './ExpensesList'
 import ExpensesForm from './ExpensesForm'
-import ExpensesHeader from './ExpensesHeader'
+
+import expensesStore from 'stores/expensesStore'
 
 const API = 'https://wisbyer59-api.herokuapp.com/';
 const USER_PATH = 'users?';
@@ -16,21 +16,22 @@ const HEADERS = new Headers({
 });
 
 class Expenses extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
+      user: {id: 1},
       users: [],
       expenses: [],
+      visibilityFilter: null
     }
   }
 
   componentDidMount() {
     fetch(API + EXPENSE_PATH)
       .then(response => response.json())
-      .then(expenses => this.setState({ 
-        expenses 
+      .then(expenses => this.setState({
+        expenses
       }));
 
     fetch(API + USER_PATH)
@@ -41,28 +42,26 @@ class Expenses extends React.Component {
   }
 
   setUser = (user) => {
-    this.setState({ 
-      user
-    })
+    this.setState({ user })
   }
 
   addExpense = (expense) => {
     const options = {
       headers: HEADERS,
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(expense)
     }
     fetch(API + EXPENSE_PATH, options)
       .then(response => response.json())
       .then(data => {
-        this.setState({ expenses: this.state.expenses.concat(data)})
+        this.setState({ expenses: this.state.expenses.concat(data) })
       });
   }
 
   deleteExpense = (expenseId) => {
     const options = {
       headers: HEADERS,
-      method: "DELETE",
+      method: 'DELETE',
     }
     const query = `id=eq.${expenseId}`
 
@@ -76,15 +75,20 @@ class Expenses extends React.Component {
   }
 
   render() {
-    const loggedIn = Object.keys(this.state.user).length !== 0;
-    const usersAvailable = this.state.users.length > 0; 
+    // const loggedIn = Object.keys(this.state.user).length !== 0;
+    // const usersAvailable = this.state.users.length > 0;
+    const { visibilityFilter } = this.state
+
     return (
-      <Container>
-        {(!loggedIn && usersAvailable) && <UserLogin users={this.state.users} setUser={this.setUser} />}
-        
-        <ExpensesHeader />
-        <ExpensesList expenses={this.state.expenses} deleteExpense={this.deleteExpense} />
-        <ExpensesForm addExpense={this.addExpense} user={this.state.user} />
+      <Container id='content'>
+        {/* {(!loggedIn && usersAvailable) && <UserLogin users={this.state.users} setUser={this.setUser} />} */}
+        <ExpensesList users={this.state.users} expenses={this.state.expenses} deleteExpense={this.deleteExpense} />
+        <Popup
+          trigger={<Icon circular id='add-expense-sticky' size='big' name='plus' />}
+          content={<ExpensesForm addExpense={this.addExpense} user={this.state.user} />}
+          on='click'
+          id='popup-sticky'
+        />
       </Container>
     );
   }

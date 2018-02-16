@@ -1,7 +1,7 @@
 import React from 'react'
 import { Header, Icon } from 'semantic-ui-react'
 
-class ExpensesHeader extends React.Component {
+class XHeader extends React.Component {
   render() {
     return (
       <Header as='h2' icon textAlign='center'>
@@ -14,4 +14,5 @@ class ExpensesHeader extends React.Component {
   }
 }
 
-export default ExpensesHeader;
+
+export default XHeader;
