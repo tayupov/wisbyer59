@@ -1,53 +1,64 @@
 import React from 'react'
-import { List } from 'semantic-ui-react'
+import { observer } from 'mobx-react'
+import { List, Button } from 'semantic-ui-react'
 
 import categories from 'constants/categories'
 
+@observer
 class ExpensesList extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.onClickHandler = this.onClickHandler.bind(this);
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
   }
 
-  onClickHandler = (expenseId) => {
-    this.deleteExpense(expenseId);
-  }
-
-  deleteExpense = (expenseId) => {
-    this.props.deleteExpense(expenseId);
+  handleClick(event, button) {
+    this.props.expensesStore.setUserIdFilter(this.props.activeUser.id)
   }
 
   render() {
-    const users = this.props.users;
-    const expenses = this.props.expenses;
+    const { activeUser, users, expensesStore } = this.props
+    const { filteredExpenses, expensesTotal, userIdFilter } = expensesStore
+    
+    const buttonActive = activeUser ? activeUser.id === userIdFilter : false
     return (
-      <List divided>
-        {expenses.map((expense, index) => {
-          const user = users.find((user) => user.id === expense.user_id);
-          const category = categories.find((category) => category.key === expense.category)
-          return (
-            <List.Item key={index}>
-              <List.Content floated='right'>
-                <List.Header>{expense.price}€</List.Header>
-                <List.Description>
-                  {user ? user.name : 'loading...'}
-                </List.Description>
-              </List.Content>
+      <div>
+        <Button basic onClick={this.handleClick} active={buttonActive}>Only my expenses</Button>
+        <List divided>
 
-              <List.Icon name={category.icon} size='large' verticalAlign='middle' />
+          {filteredExpenses.map((expense, index) => {
+            const user = users.find((user) => user.id === expense.user_id);
+            const category = categories.find((category) => category.key === expense.category)
+            return (
+              <List.Item key={index}>
+                <List.Content floated='right'>
+                  <List.Header>{expense.price}€</List.Header>
+                  <List.Description>
+                    {user ? user.name : 'loading...'}
+                  </List.Description>
+                </List.Content>
 
-              <List.Content>
-                <List.Header>{expense.category}</List.Header>
-                <List.Description>
-                  {expense.description}
-                </List.Description>
-              </List.Content>
+                <List.Icon name={category.icon} size='large' verticalAlign='middle' />
 
-            </List.Item>
-          );
-        })}
-      </List>
+                <List.Content>
+                  <List.Header>{expense.category}</List.Header>
+                  <List.Description>
+                    {expense.description}
+                  </List.Description>
+                </List.Content>
+
+              </List.Item>
+            );
+          })}
+          
+          <List.Item>
+            <List.Content floated='right'>
+              <List.Header>{expensesTotal}€</List.Header>
+              <List.Description>Total</List.Description>
+            </List.Content>
+          </List.Item>
+        </List>
+      </div>
     );
   }
 }

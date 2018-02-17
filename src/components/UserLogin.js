@@ -1,11 +1,13 @@
 import React from 'react'
+import { observer } from 'mobx-react'
 import { Card, Image, Dimmer } from 'semantic-ui-react'
 
+@observer
 class UserLogin extends React.Component {
 
   onClickHandler = (event, card) => {
     const user = card.user;
-    this.props.setUser(user);
+    this.props.setActiveUser(user);
   }
 
   render() {

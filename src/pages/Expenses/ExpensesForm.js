@@ -1,97 +1,62 @@
 import React from 'react'
 import { Form } from 'semantic-ui-react'
 
-import categories from 'constants/categories'
+import categories from 'constants/categories';
 
-const API = 'https://wisbyer59-api.herokuapp.com/';
-const USER_PATH = 'users?';
-
+/* 
+The react state of this component describes the form data
+and will be used to create an expense
+ */
 class ExpensesForm extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.onDebtorChange = this.onDebtorChange.bind(this);
-    this.onSubmitHandler = this.onSubmitHandler.bind(this);
+    super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.state = {
-      debtorId: null,
-      debtorOptions: [{
-        key: 0, value: 'Both', text: 'Both'
-      }],
-      categoryOptions: [
-
-      ]
+      price: '',
+      description: '',
+      time: null,
+      debtorIds: [],
+      category: ''
     }
   }
 
   componentDidMount() {
-    fetch(API + USER_PATH)
-      .then(response => response.json())
-      .then(users => {
-        const debtorOptions = users
-          .filter(user => user.id !== this.props.user.id)
-          .map(user => ({ key: user.id, value: user.name, text: user.name }))
-          .concat(this.state.debtorOptions);
-
-        this.setState({
-          debtorOptions
-        });
-      })
+    this.setState({ user_id: this.props.activeUser })
   }
 
-  componentDidUpdate() {
-    const user = this.props.user;
-    const debtorOptions = this.state.debtorOptions;
-    const debtorExists = debtorOptions.find((debtor) => debtor.key === user.id);
-    if (debtorExists) {
-      this.setState({
-        debtorOptions: debtorOptions.filter((debtor) => debtor.key !== user.id)
-      })
-    }
-  }
+  handleSubmit = (event) => {
+    const { price, description, debtorIds } = this.state
 
-  onSubmitHandler = (event) => {
-    const priceElement = document.getElementById('expensePrince');
-    const descriptionElement = document.getElementById('expenseDescription');
-    const debtorElement = document.getElementById('expenseDebtor');
-
-    const price = priceElement.value;
-    const description = descriptionElement.value;
-    const debtorId = this.state.debtorId;
-
-    if (price && description && (typeof debtorId === 'number')) {
-      this.addExpense({
-        price,
+    if (price && description && debtorIds.length > 0) {
+      const expense = {
+        price: +price,
         description,
         time: + new Date(),
-        user_id: debtorId
-      });
-
-      priceElement.value = '';
-      descriptionElement.value = '';
-      debtorElement.firstChild.innerHTML = '';
+        user_id: this.props.activeUser.id,
+        debtor_ids: debtorIds
+      }
+      this.props.addExpense(expense);
     }
   }
 
-  addExpense = (expense) => {
-    this.props.addExpense(expense);
-  }
-
-  onDebtorChange = (e, select) => {
-    const debtor = this.state.debtorOptions.find(debtor => (debtor.value === select.value))
-    if (debtor) {
-      this.setState({
-        debtorId: debtor.key
-      })
-    }
-  }
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
   render() {
+    const { users, activeUser } = this.props
+    const debtorOptions = users
+      .filter(user => user.id !== activeUser.id)
+      .map(user => ({ key: user.id, value: user.id, text: user.name }) )
+
+    const { price, description, category } = this.state
+
     return (
-      <Form onSubmit={this.onSubmitHandler}>
-        <Form.Input placeholder='Price' id='expensePrince' type='number' min='0' step='0.01' />
-        <Form.Input placeholder='Description' id='expenseDescription' type='text' />
-        <Form.Select placeholder='Debtor' id='expenseDebtor' options={this.state.debtorOptions} onChange={this.onDebtorChange} />
-        <Form.Select placeholder='Category' id='expenseCategory' options={categories} pointing='right' />
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Input placeholder='Price' name='price' value={price} type='number' min='0' step='0.01' onChange={this.handleChange} />
+        <Form.Input placeholder='Description' name='description' value={description} type='text' onChange={this.handleChange} />
+        <Form.Select multiple placeholder='Debtor' name='debtorIds' options={debtorOptions} onChange={this.handleChange} />
+        <Form.Select placeholder='Category' name='category' value={category} options={categories} pointing='right' onChange={this.handleChange} />
         <Form.Button basic fluid>Submit</Form.Button>
       </Form>
     );
