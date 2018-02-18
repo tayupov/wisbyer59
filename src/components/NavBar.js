@@ -12,7 +12,7 @@ class NavBar extends React.Component {
             <Menu.Item as={Link} to='/'>
               <Icon name='home' />
             </Menu.Item>
-            <Menu.Item as={Link} to='/distribution'>
+            <Menu.Item as={Link} to='/insights'>
               <Icon name='bar graph' />
             </Menu.Item>
           </Container>

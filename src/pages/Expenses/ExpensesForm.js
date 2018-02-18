@@ -7,6 +7,7 @@ import categories from 'constants/categories';
 The react state of this component describes the form data
 and will be used to create an expense
  */
+
 class ExpensesForm extends React.Component {
 
   constructor(props) {
@@ -16,28 +17,28 @@ class ExpensesForm extends React.Component {
     this.state = {
       price: '',
       description: '',
-      time: null,
-      debtorIds: [],
-      category: ''
+      category: '',
+      debtorIds: []
     }
-  }
-
-  componentDidMount() {
-    this.setState({ user_id: this.props.activeUser })
   }
 
   handleSubmit = (event) => {
     const { price, description, debtorIds } = this.state
 
     if (price && description && debtorIds.length > 0) {
-      const expense = {
-        price: +price,
-        description,
-        time: + new Date(),
-        user_id: this.props.activeUser.id,
-        debtor_ids: debtorIds
-      }
-      this.props.addExpense(expense);
+      const currentTime = +new Date()
+      const expenses = debtorIds.map(id => (
+        {
+          price: parseInt(this.state.price, 10),
+          description: this.state.description,
+          category: this.state.category,
+          created_at: currentTime,
+          paid: false,
+          debtor_id: id,
+          creator_id: this.props.activeUser.id
+        }
+      ))
+      this.props.addExpenses(expenses)
     }
   }
 

@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import NavBar from 'components/NavBar'
 
 import Expenses from 'pages/Expenses'
+import Insights from 'pages/Insights'
 
 class Main extends React.Component {
   render() {
@@ -14,8 +15,8 @@ class Main extends React.Component {
         </nav>
         <main>
           <Switch>
-            <Route exath path='/' component={Expenses} />
-            <Route path='/distribution' />
+            <Route path='/insights' component={Insights} />
+            <Route path='/' component={Expenses} />
           </Switch>
         </main>
       </div>

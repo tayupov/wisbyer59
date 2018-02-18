@@ -1,7 +1,8 @@
+import _ from 'lodash'
 import { observable, computed, action } from 'mobx'
 import minimalHeaders from 'constants/minimalHeaders'
-const API_ROOT = process.env.REACT_APP_API_ROOT;
 
+const API_ROOT = process.env.REACT_APP_API_ROOT
 
 class ExpensesStore {
   constructor() {
@@ -9,14 +10,21 @@ class ExpensesStore {
   }
 
   @observable expenses = []
-  @observable userIdFilter = null
   @observable fetchStatus = 'pending'
+
+  @observable filter = null
+  @observable userIdFilter = null
 
   @computed get
   filteredExpenses() {
-    if (!this.userIdFilter) { return this.expenses }
-    const filtered = this.expenses.filter(exp => exp.user_id === this.userIdFilter)
+    if (!this.userIdFilter) { return this.uniqueExpenses }
+    const filtered = this.uniqueExpenses.filter(exp => exp[this.filter] === this.userIdFilter)
     return filtered
+  }
+
+  @computed get
+  uniqueExpenses() {
+    return _.uniqBy(this.expenses, 'created_at')
   }
 
   @computed get
@@ -25,9 +33,15 @@ class ExpensesStore {
   }
 
   @action.bound
-  setUserIdFilter(userId) {
-    // show unfiltered if same user
-    this.userIdFilter = this.userIdFilter === userId ? null : userId
+  setFilter(filter, userId) {
+    // same button press, disable filters
+    if (this.filter === `${filter}_id`) {
+      this.filter = null
+      this.userIdFilter = null
+      return
+    }
+    this.filter = `${filter}_id`
+    this.userIdFilter =  userId
   }
 
   @action
@@ -38,11 +52,11 @@ class ExpensesStore {
   }
 
   @action.bound
-  addExpense(expense) {
+  addExpenses(expenses) {
     const options = {
       method: 'POST',
       headers: minimalHeaders,
-      body: JSON.stringify(expense)
+      body: JSON.stringify(expenses)
     }
     fetch(API_ROOT + '/expenses', options)
       .then(response => {

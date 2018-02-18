@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx'
 
-const API_ROOT = process.env.REACT_APP_API_ROOT;
+const API_ROOT = process.env.REACT_APP_API_ROOT
 
 class UserStore {
   @observable users = []
