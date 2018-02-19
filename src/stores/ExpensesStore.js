@@ -59,8 +59,26 @@ class ExpensesStore {
       body: JSON.stringify(expenses)
     }
     fetch(API_ROOT + '/expenses', options)
-      .then(response => {
-        if (response.status === 201) {
+      .then(res => {
+        if (res.status === 201) {
+          this.fetchExpenses()
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+
+  @action.bound
+  updateExpense(expense, payload) {
+    const options = {
+      method: 'PATCH',
+      headers: minimalHeaders,
+      body: JSON.stringify(payload)
+    }
+    fetch(API_ROOT + `/expenses?created_at=eq.${expense.created_at}`, options)
+      .then(res => {
+        if (res.status === 204) {
           this.fetchExpenses()
         }
       })

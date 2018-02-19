@@ -2,6 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from 'semantic-ui-react'
 
+import PaymentButtons from './PaymentButtons'
 import categories from 'constants/categories'
 
 @observer
@@ -33,16 +34,25 @@ class ExpensesList extends React.Component {
           {filteredExpenses.map((expense, index) => {
             const creator = users.find((user) => user.id === expense.creator_id);
             const category = categories.find((category) => category.key === expense.category)
+
             return (
               <List.Item key={index}>
+
                 <List.Content floated='right'>
-                  <List.Header className='expense-price'>{expense.price}€</List.Header>
+                  <List.Header className='expense-price'>
+                    {expense.price}€
+                  </List.Header>
                   <List.Description>
                     {creator ? creator.name : 'loading...'}
                   </List.Description>
                 </List.Content>
 
-                <List.Icon name={category.icon} size='large' verticalAlign='middle' />
+                <PaymentButtons 
+                  expense={expense}
+                  expensesStore={expensesStore}
+                />
+
+                <List.Icon name={category.icon} size='large' verticalAlign='middle'/>
 
                 <List.Content>
                   <List.Header>{category.text}</List.Header>
@@ -55,7 +65,7 @@ class ExpensesList extends React.Component {
             );
           })}
 
-          {filteredExpenses.length > 0 && this.totalItem(expensesTotal) }
+          {filteredExpenses.length > 0 && this.totalItem(expensesTotal)}
 
         </List>
       </div>
