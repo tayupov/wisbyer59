@@ -16,8 +16,8 @@ class Expenses extends React.Component {
     const loggedIn = userStore.activeUser !== null;
     const usersAvailable = userStore.users.length > 0;
     return (
-      <Container>
-        <div className='main'>
+      <div className='main'>
+        <Container>
           {(!loggedIn && usersAvailable) &&
             <UserLogin
               users={userStore.users}
@@ -43,8 +43,8 @@ class Expenses extends React.Component {
             on='click'
             id='popup-sticky'
           />
-        </div>
-      </Container>
+        </Container>
+      </div>
     );
   }
 }

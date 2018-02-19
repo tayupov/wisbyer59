@@ -15,7 +15,7 @@ class ExpensesList extends React.Component {
   totalItem = (expensesTotal) => (
     <List.Item>
       <List.Content floated='right'>
-        <List.Header>{expensesTotal}€</List.Header>
+        <List.Header className='expense-price'>{expensesTotal}€</List.Header>
         <List.Description>Total</List.Description>
       </List.Content>
     </List.Item>
@@ -36,7 +36,7 @@ class ExpensesList extends React.Component {
             return (
               <List.Item key={index}>
                 <List.Content floated='right'>
-                  <List.Header id='expense-price'>{expense.price}€</List.Header>
+                  <List.Header className='expense-price'>{expense.price}€</List.Header>
                   <List.Description>
                     {creator ? creator.name : 'loading...'}
                   </List.Description>
@@ -55,9 +55,7 @@ class ExpensesList extends React.Component {
             );
           })}
 
-          {filteredExpenses.length > 0 &&
-            this.totalItem(expensesTotal)
-          }
+          {filteredExpenses.length > 0 && this.totalItem(expensesTotal) }
 
         </List>
       </div>

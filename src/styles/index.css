@@ -18,6 +18,6 @@
     top: auto !important;
 }
 
-#expense-price {
+.expense-price {
   float:right
 }
